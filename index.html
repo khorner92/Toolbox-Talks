@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toolbox Talk – Sign In</title>
+<style>
+/* ── EDIT THESE BEFORE UPLOADING ── */
+:root {
+  --company:   “FORCE TECH”;
+}
+
+@import url(‘https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap’);
+
+:root {
+–yellow: #F5C400;
+–black:  #0D0D0D;
+–dark:   #1A1A1A;
+–panel:  #222222;
+–border: #333333;
+–text:   #E8E8E8;
+–muted:  #888888;
+–red:    #E53E3E;
+–green:  #38A169;
+–font-display: ‘Bebas Neue’, ‘Arial Black’, sans-serif;
+–font-body:    ‘IBM Plex Sans’, Arial, sans-serif;
+–font-mono:    ‘IBM Plex Mono’, ‘Courier New’, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–black);
+color: var(–text);
+font-family: var(–font-body);
+min-height: 100vh;
+}
+
+/* HEADER */
+.hdr {
+background: var(–yellow);
+display: flex;
+align-items: stretch;
+padding: 0 20px;
+}
+.hdr-co {
+background: var(–black);
+color: var(–yellow);
+font-family: var(–font-display);
+font-size: 13px;
+letter-spacing: 2px;
+padding: 14px 18px;
+display: flex;
+align-items: center;
+white-space: nowrap;
+margin-right: 16px;
+}
+.hdr-title {
+font-family: var(–font-display);
+font-size: 26px;
+letter-spacing: 3px;
+color: var(–black);
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.hdr-badge {
+background: var(–black);
+color: var(–yellow);
+font-family: var(–font-mono);
+font-size: 9px;
+letter-spacing: 1.5px;
+padding: 4px 8px;
+}
+
+/* NAV */
+.nav { background: var(–dark); border-bottom: 1px solid var(–border); }
+.nav-inner { max-width: 740px; margin: 0 auto; padding: 0 20px; display: flex; }
+.ntab {
+font-family: var(–font-display);
+font-size: 15px;
+letter-spacing: 2px;
+padding: 11px 22px;
+cursor: pointer;
+color: var(–muted);
+background: none;
+border: none;
+transition: color .15s, background .15s;
+}
+.ntab:hover { color: var(–text); }
+.ntab.on { background: var(–yellow); color: var(–black); }
+
+/* VIEWS */
+.view { display: none; }
+.view.on { display: block; }
+
+/* INFO BAR */
+.wrap { max-width: 740px; margin: 0 auto; padding: 28px 20px 60px; }
+.infobar {
+background: var(–panel);
+border-left: 4px solid var(–yellow);
+padding: 14px 18px;
+margin-bottom: 26px;
+display: flex;
+flex-wrap: wrap;
+gap: 10px 32px;
+}
+.il { font-family: var(–font-mono); font-size: 10px; letter-spacing: 2px; color: var(–muted); text-transform: uppercase; margin-bottom: 3px; }
+.iv { font-size: 14px; font-weight: 600; }
+
+/* FORM CARD */
+.card {
+background: var(–dark);
+border: 1px solid var(–border);
+padding: 26px 28px;
+margin-bottom: 32px;
+}
+.card-title {
+font-family: var(–font-display);
+font-size: 20px;
+letter-spacing: 2px;
+color: var(–yellow);
+margin-bottom: 20px;
+}
+.row { display: flex; gap: 14px; }
+.row .fg { flex: 1; }
+.fg { margin-bottom: 16px; }
+.fg label {
+display: block;
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 6px;
+}
+.fg input {
+width: 100%;
+background: var(–panel);
+border: 1px solid var(–border);
+color: var(–text);
+font-family: var(–font-body);
+font-size: 15px;
+padding: 10px 12px;
+outline: none;
+transition: border-color .15s;
+}
+.fg input:focus { border-color: var(–yellow); }
+
+/* CANVAS */
+.sig-wrap { margin-bottom: 16px; }
+.sig-wrap label {
+display: block;
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 6px;
+}
+#sigCanvas {
+display: block;
+background: var(–panel);
+border: 1px solid var(–border);
+cursor: crosshair;
+touch-action: none;
+width: 100%;
+max-width: 100%;
+height: 110px;
+}
+.clr-btn {
+margin-top: 6px;
+background: none;
+border: 1px solid var(–border);
+color: var(–muted);
+font-family: var(–font-mono);
+font-size: 11px;
+letter-spacing: 1px;
+padding: 5px 11px;
+cursor: pointer;
+}
+.clr-btn:hover { color: var(–text); border-color: var(–text); }
+
+/* ACK */
+.ack {
+background: var(–panel);
+border: 1px solid var(–border);
+padding: 12px 14px;
+margin: 16px 0;
+display: flex;
+gap: 10px;
+align-items: flex-start;
+}
+.ack input[type=checkbox] { width: 17px; height: 17px; margin-top: 2px; accent-color: var(–yellow); flex-shrink: 0; cursor: pointer; }
+.ack label { font-size: 13px; color: var(–muted); line-height: 1.5; cursor: pointer; }
+
+/* BUTTONS */
+.btn {
+display: inline-block;
+font-family: var(–font-display);
+font-size: 17px;
+letter-spacing: 2px;
+padding: 12px 30px;
+cursor: pointer;
+border: none;
+transition: opacity .15s, transform .1s;
+}
+.btn:active { transform: scale(.98); }
+.btn-y { background: var(–yellow); color: var(–black); }
+.btn-y:hover { opacity: .88; }
+.btn-g {
+background: transparent;
+color: var(–muted);
+border: 1px solid var(–border);
+font-size: 13px;
+letter-spacing: 1px;
+padding: 9px 18px;
+}
+.btn-g:hover { color: var(–text); border-color: var(–text); }
+
+/* ALERTS */
+.err {
+background: rgba(229,62,62,.12);
+border: 1px solid var(–red);
+color: #FC8181;
+font-size: 13px;
+padding: 9px 13px;
+margin-bottom: 12px;
+display: none;
+}
+.ok {
+background: rgba(56,161,105,.15);
+border: 1px solid var(–green);
+color: #68D391;
+font-family: var(–font-mono);
+font-size: 13px;
+padding: 11px 14px;
+margin-bottom: 16px;
+display: none;
+}
+
+/* ROSTER */
+.roster-hdr {
+font-family: var(–font-display);
+font-size: 19px;
+letter-spacing: 2px;
+color: var(–yellow);
+margin-bottom: 12px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.badge {
+background: var(–yellow);
+color: var(–black);
+font-family: var(–font-mono);
+font-size: 11px;
+font-weight: 700;
+padding: 2px 9px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+background: var(–panel);
+font-family: var(–font-mono);
+font-size: 9px;
+letter-spacing: 2px;
+text-transform: uppercase;
+color: var(–muted);
+padding: 10px 13px;
+text-align: left;
+border-bottom: 2px solid var(–yellow);
+}
+td { padding: 10px 13px; border-bottom: 1px solid var(–border); vertical-align: middle; }
+tr:hover td { background: rgba(255,255,255,.02); }
+.sig-img { height: 34px; background: var(–panel); border: 1px solid var(–border); }
+.mono { font-family: var(–font-mono); color: var(–muted); font-size: 11px; }
+.empty {
+padding: 32px;
+text-align: center;
+color: var(–muted);
+font-style: italic;
+background: var(–dark);
+border: 1px dashed var(–border);
+}
+
+/* ADMIN */
+.admin-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 10px; }
+.admin-hdr h2 { font-family: var(–font-display); font-size: 22px; letter-spacing: 2px; }
+.statbar { background: var(–dark); border: 1px solid var(–border); padding: 16px 22px; margin-bottom: 22px; display: flex; gap: 36px; flex-wrap: wrap; }
+.sl { font-family: var(–font-mono); font-size: 9px; letter-spacing: 2px; color: var(–muted); margin-bottom: 4px; }
+.sv { font-size: 14px; font-weight: 600; }
+.sv.big { font-size: 36px; font-family: var(–font-display); color: var(–yellow); }
+.pin-box { max-width: 360px; margin: 50px auto; padding: 0 20px; }
+.pin-box h2 { font-family: var(–font-display); font-size: 20px; letter-spacing: 2px; color: var(–yellow); margin-bottom: 16px; }
+
+@media print {
+body { background: #fff; color: #000; }
+.hdr { background: #F5C400 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.no-print { display: none !important; }
+.card { display: none; }
+th { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+@media (max-width: 520px) {
+.row { flex-direction: column; }
+.card { padding: 18px; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- ── CONFIG: edit before uploading ── -->
+
+<script>
+var C = {
+  company:  “FORCE TECH”,
+  title:    “Ladder Safety”,
+  presenter:”Nick Toepp”,
+  pin:      “0415”
+};
+</script>
+
+<!-- HEADER -->
+
+<div class="hdr">
+  <div class="hdr-co" id="hco"></div>
+  <div class="hdr-title">TOOLBOX TALK <span class="hdr-badge">SIGN-IN SHEET</span></div>
+</div>
+
+<!-- NAV -->
+
+<div class="nav no-print">
+  <div class="nav-inner">
+    <button class="ntab on" id="t-si" onclick="go('si')">Sign In</button>
+    <button class="ntab"    id="t-ad" onclick="go('ad')">Admin / Export</button>
+  </div>
+</div>
+
+<!-- SIGN-IN VIEW -->
+
+<div id="v-si" class="view on">
+  <div class="wrap">
+
+```
+<div class="infobar">
+  <div><div class="il">Talk / Topic</div><div class="iv" id="d-title"></div></div>
+  <div><div class="il">Presenter</div><div class="iv" id="d-pres"></div></div>
+  <div><div class="il">Date</div><div class="iv" id="d-date"></div></div>
+</div>
+
+<div class="card no-print">
+  <div class="card-title">✍ SIGN IN BELOW</div>
+  <div id="ok-flash" class="ok">✔ Signed in successfully!</div>
+  <div id="f-err" class="err">Please fill in your name, draw your signature, and check the box.</div>
+
+  <div class="row">
+    <div class="fg"><label>First Name</label><input type="text" id="fn" placeholder="First" autocomplete="given-name"></div>
+    <div class="fg"><label>Last Name</label><input type="text" id="ln" placeholder="Last" autocomplete="family-name"></div>
+  </div>
+
+  <div class="sig-wrap">
+    <label>Signature <span style="font-weight:400;color:var(--muted)">(draw in the box)</span></label>
+    <canvas id="sigCanvas"></canvas>
+    <button class="clr-btn" onclick="clearSig()">✕ Clear</button>
+  </div>
+
+  <div class="ack">
+    <input type="checkbox" id="ack">
+    <label for="ack">I confirm I attended the toolbox talk "<strong id="ack-t"></strong>" and understand the safety information presented.</label>
+  </div>
+
+  <button class="btn btn-y" onclick="submit()">SUBMIT SIGN-IN</button>
+</div>
+
+<div>
+  <div class="roster-hdr">ATTENDANCE ROSTER <span class="badge" id="r-cnt">0 SIGNED</span></div>
+  <div id="roster"><div class="empty">No signatures yet — be the first to sign in.</div></div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+
+<div id="v-ad" class="view">
+  <div class="wrap" style="max-width:860px">
+
+```
+<div id="pin-gate">
+  <div class="pin-box">
+    <h2>🔒 ADMIN ACCESS</h2>
+    <div class="fg"><label>Admin PIN</label><input type="password" id="pin-in" placeholder="Enter PIN" maxlength="8" onkeydown="if(event.key==='Enter')chkPin()"></div>
+    <div id="pin-err" class="err" style="display:none">Incorrect PIN.</div>
+    <button class="btn btn-y" onclick="chkPin()">UNLOCK</button>
+  </div>
+</div>
+
+<div id="admin-panel" style="display:none">
+  <div class="admin-hdr">
+    <div>
+      <div style="font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:5px">ADMIN PANEL</div>
+      <h2 id="a-title"></h2>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-g" onclick="exportCSV()">↓ Export CSV</button>
+      <button class="btn btn-y" onclick="window.print()">🖨 Print</button>
+      <button class="btn btn-g" onclick="clearAll()" style="border-color:var(--red);color:var(--red)">✕ Clear All</button>
+    </div>
+  </div>
+  <div class="statbar">
+    <div><div class="sl">Total Signed In</div><div class="sv big" id="a-cnt">0</div></div>
+    <div><div class="sl">Date</div><div class="sv" id="a-date"></div></div>
+    <div><div class="sl">Presenter</div><div class="sv" id="a-pres"></div></div>
+  </div>
+  <div id="a-roster"></div>
+</div>
+```
+
+  </div>
+</div>
+
+<script>
+var SK = 'tbt2_entries';
+var entries = [];
+var unlocked = false;
+
+// Apply config
+document.getElementById('hco').textContent     = C.company;
+document.getElementById('d-title').textContent  = C.title;
+document.getElementById('d-pres').textContent   = C.presenter;
+document.getElementById('ack-t').textContent    = C.title;
+document.getElementById('d-date').textContent   = new Date().toLocaleDateString('en-US',
+  {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// Canvas
+var cv  = document.getElementById('sigCanvas');
+var ctx = cv.getContext('2d');
+var drawing = false, hasSig = false;
+
+function initCtx() { ctx.strokeStyle='#F5C400'; ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.lineJoin='round'; }
+function sizeCv() {
+  var w = Math.min(cv.parentElement.clientWidth, 680);
+  var snap = hasSig ? cv.toDataURL() : null;
+  cv.width = w; cv.height = 110; initCtx();
+  if (snap) { var img = new Image(); img.onload = function(){ ctx.drawImage(img,0,0,w,110); }; img.src = snap; }
+}
+initCtx(); sizeCv();
+window.addEventListener('resize', sizeCv);
+
+function pos(e) {
+  var r = cv.getBoundingClientRect(), s = e.touches ? e.touches[0] : e;
+  return { x:(s.clientX-r.left)*(cv.width/r.width), y:(s.clientY-r.top)*(cv.height/r.height) };
+}
+cv.addEventListener('mousedown',  function(e){ drawing=true; var p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
+cv.addEventListener('mousemove',  function(e){ if(!drawing)return; var p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); hasSig=true; });
+cv.addEventListener('mouseup',    function(){ drawing=false; });
+cv.addEventListener('mouseleave', function(){ drawing=false; });
+cv.addEventListener('touchstart', function(e){ e.preventDefault(); drawing=true; var p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); }, {passive:false});
+cv.addEventListener('touchmove',  function(e){ e.preventDefault(); if(!drawing)return; var p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); hasSig=true; }, {passive:false});
+cv.addEventListener('touchend',   function(){ drawing=false; });
+function clearSig(){ ctx.clearRect(0,0,cv.width,cv.height); hasSig=false; }
+
+// Storage
+function save() { try { window.storage.set(SK, JSON.stringify(entries)); } catch(e) { try { localStorage.setItem(SK, JSON.stringify(entries)); } catch(e2){} } }
+function load() {
+  try {
+    window.storage.get(SK).then(function(r){ if(r) entries=JSON.parse(r.value); render('roster'); }).catch(function(){
+      try { var d=localStorage.getItem(SK); if(d) entries=JSON.parse(d); } catch(e){}
+      render('roster');
+    });
+  } catch(e) {
+    try { var d=localStorage.getItem(SK); if(d) entries=JSON.parse(d); } catch(e2){}
+    render('roster');
+  }
+}
+
+// Submit
+function submit() {
+  var f = document.getElementById('fn').value.trim();
+  var l = document.getElementById('ln').value.trim();
+  var a = document.getElementById('ack').checked;
+  var err = document.getElementById('f-err');
+  if (!f||!l||!hasSig||!a){ err.style.display='block'; return; }
+  err.style.display='none';
+  entries.push({ id:Date.now(), first:f, last:l, sig:cv.toDataURL('image/png'),
+    time:new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) });
+  save(); render('roster');
+  document.getElementById('fn').value='';
+  document.getElementById('ln').value='';
+  document.getElementById('ack').checked=false;
+  clearSig();
+  var ok=document.getElementById('ok-flash'); ok.style.display='block';
+  setTimeout(function(){ ok.style.display='none'; }, 3000);
+}
+
+// Render
+function render(id) {
+  var el = document.getElementById(id);
+  var cnt = document.getElementById('r-cnt');
+  if (cnt) cnt.textContent = entries.length+' SIGNED';
+  if (!entries.length){ el.innerHTML='<div class="empty">No signatures yet — be the first to sign in.</div>'; return; }
+  var rows = entries.map(function(e,i){ return '<tr><td class="mono">#'+(i+1)+'</td><td><strong>'+e.first+' '+e.last+'</strong></td><td><img class="sig-img" src="'+e.sig+'"/></td><td class="mono">'+e.time+'</td></tr>'; }).join('');
+  el.innerHTML='<table><thead><tr><th>#</th><th>Name</th><th>Signature</th><th>Timestamp</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+// Tabs
+function go(tab) {
+  ['si','ad'].forEach(function(t){
+    document.getElementById('v-'+t).classList.toggle('on', t===tab);
+    document.getElementById('t-'+t).classList.toggle('on', t===tab);
+  });
+  if (tab==='ad') refreshAdmin();
+}
+
+// Admin
+function chkPin() {
+  if (document.getElementById('pin-in').value === C.pin) {
+    document.getElementById('pin-gate').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    unlocked=true; refreshAdmin();
+  } else { document.getElementById('pin-err').style.display='block'; }
+}
+function refreshAdmin() {
+  if (!unlocked) return;
+  document.getElementById('a-title').textContent = C.title;
+  document.getElementById('a-cnt').textContent   = entries.length;
+  document.getElementById('a-date').textContent  = document.getElementById('d-date').textContent;
+  document.getElementById('a-pres').textContent  = C.presenter;
+  render('a-roster');
+}
+function exportCSV() {
+  var csv='"Talk Title","'+C.title+'"\n"Company","'+C.company+'"\n"Presenter","'+C.presenter+'"\n"Date","'+document.getElementById('d-date').textContent+'"\n\n"#","First Name","Last Name","Timestamp"\n';
+  entries.forEach(function(e,i){ csv+='"'+(i+1)+'","'+e.first+'","'+e.last+'","'+e.time+'"\n'; });
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='toolbox-talk.csv'; a.click();
+}
+function clearAll() {
+  if (!confirm('Clear ALL entries? Cannot be undone.')) return;
+  entries=[]; save(); refreshAdmin(); render('roster');
+}
+
+load();
+</script>
+
+</body>
+</html>
