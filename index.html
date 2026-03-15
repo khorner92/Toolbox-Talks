@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toolbox Talk – Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+  /* ════════════════════════════════════════════
+     ✏  EDIT THESE BEFORE HOSTING
+     ════════════════════════════════════════════ */
+  const CONFIG = {
+    company:   "YOUR COMPANY NAME",
+    talkTitle: "Talk Title / Topic",
+    presenter: "Presenter Name",
+    adminPin:  "1234"
+  };
+  /* ════════════════════════════════════════════ */
+</script>
+
+<style>
+  :root {
+    --yellow: #F5C400;
+    --black: #0D0D0D;
+    --charcoal: #1A1A1A;
+    --panel: #222222;
+    --border: #333333;
+    --text: #E8E8E8;
+    --muted: #888888;
+    --red: #E53E3E;
+    --green: #38A169;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  .site-header {
+    background: var(--yellow);
+    padding: 0 24px;
+    display: flex;
+    align-items: stretch;
+  }
+  .header-logo {
+    background: var(--black);
+    color: var(--yellow);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin-right: 20px;
+  }
+  .header-title {
+    color: var(--black);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-badge {
+    background: var(--black);
+    color: var(--yellow);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+  }
+
+  .nav-bar { background: var(--charcoal); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 760px; margin: 0 auto; padding: 0 20px; display: flex; }
+  .nav-tab {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    padding: 12px 24px;
+    cursor: pointer;
+    color: var(--muted);
+    background: none;
+    border: none;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { background: var(--yellow); color: var(--black); }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  .talk-info-bar {
+    background: var(--panel);
+    border-left: 4px solid var(--yellow);
+    padding: 14px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 36px;
+  }
+  .info-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .info-val { font-size: 15px; font-weight: 600; }
+
+  .signin-wrap { max-width: 760px; margin: 0 auto; padding: 32px 20px 60px; }
+  .signin-form {
+    background: var(--charcoal);
+    border: 1px solid var(--border);
+    padding: 28px 32px;
+    margin-bottom: 36px;
+  }
+  .signin-form h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    margin-bottom: 22px;
+  }
+  .form-row { display: flex; gap: 16px; }
+  .form-row .field-group { flex: 1; }
+  .field-group { margin-bottom: 18px; }
+  .field-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+  .field-group input {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    padding: 11px 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field-group input:focus { border-color: var(--yellow); }
+
+  .sig-area-wrap { margin-bottom: 18px; }
+  .sig-area-wrap label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+  #sigCanvas {
+    display: block;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    cursor: crosshair;
+    touch-action: none;
+    width: 100%;
+    max-width: 660px;
+  }
+  .sig-tools { margin-top: 7px; }
+  .sig-tools button {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .sig-tools button:hover { color: var(--text); border-color: var(--text); }
+
+  .acknowledgement {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    margin: 18px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .acknowledgement input[type="checkbox"] {
+    width: 18px; height: 18px;
+    margin-top: 2px;
+    accent-color: var(--yellow);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .acknowledgement label { font-size: 13px; color: var(--muted); line-height: 1.5; cursor: pointer; }
+
+  .btn {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 13px 32px;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--yellow); color: var(--black); }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+
+  .error-msg {
+    background: rgba(229,62,62,0.12);
+    border: 1px solid var(--red);
+    color: #FC8181;
+    font-size: 13px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    display: none;
+  }
+  .success-flash {
+    background: rgba(56,161,105,0.15);
+    border: 1px solid var(--green);
+    color: #68D391;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    display: none;
+  }
+
+  .roster-section h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .roster-count {
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+  }
+  .roster-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .roster-table th {
+    background: var(--panel);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 11px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--yellow);
+  }
+  .roster-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .roster-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .sig-thumb { height: 36px; background: var(--panel); border: 1px solid var(--border); }
+  .entry-num { font-family: 'IBM Plex Mono', monospace; color: var(--muted); font-size: 12px; }
+  .roster-empty {
+    padding: 36px;
+    text-align: center;
+    color: var(--muted);
+    font-style: italic;
+    background: var(--charcoal);
+    border: 1px dashed var(--border);
+  }
+
+  .admin-wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+  .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+  .admin-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; }
+  .stat-bar { background: var(--charcoal); border: 1px solid var(--border); padding: 18px 24px; margin-bottom: 24px; display: flex; gap: 40px; flex-wrap: wrap; }
+  .s-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); margin-bottom: 4px; }
+  .s-val { font-size: 15px; font-weight: 600; }
+  .s-val.big { font-size: 38px; font-family: 'Bebas Neue', sans-serif; color: var(--yellow); }
+
+  .pin-gate-inner { max-width: 380px; margin: 60px auto; padding: 0 20px; }
+  .pin-gate-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--yellow); margin-bottom: 18px; }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .site-header { background: #F5C400 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-print { display: none !important; }
+    .signin-form { display: none; }
+    .roster-table th { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 540px) {
+    .form-row { flex-direction: column; }
+    .signin-form { padding: 20px; }
+  }
+</style>
+
+</head>
+<body>
+
+<div class="site-header">
+  <div class="header-logo" id="hdr-company">—</div>
+  <div class="header-title">
+    TOOLBOX TALK
+    <span class="header-badge">SIGN-IN SHEET</span>
+  </div>
+</div>
+
+<div class="nav-bar no-print">
+  <div class="nav-inner">
+    <button class="nav-tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+    <button class="nav-tab" id="tab-admin" onclick="switchTab('admin')">Admin / Export</button>
+  </div>
+</div>
+
+<!-- SIGN-IN VIEW -->
+
+<div id="view-signin" class="view active">
+  <div class="signin-wrap">
+
+```
+<div class="talk-info-bar">
+  <div><div class="info-label">Talk / Topic</div><div class="info-val" id="di-title">—</div></div>
+  <div><div class="info-label">Presenter</div><div class="info-val" id="di-presenter">—</div></div>
+  <div><div class="info-label">Date</div><div class="info-val" id="di-date">—</div></div>
+</div>
+
+<div class="signin-form no-print">
+  <h2>✍ SIGN IN BELOW</h2>
+  <div id="success-flash" class="success-flash">✔ Signed in successfully!</div>
+  <div id="form-error" class="error-msg">Please fill in your name, draw your signature, and check the acknowledgement.</div>
+
+  <div class="form-row">
+    <div class="field-group">
+      <label>First Name</label>
+      <input type="text" id="f-first" placeholder="First" autocomplete="given-name" />
+    </div>
+    <div class="field-group">
+      <label>Last Name</label>
+      <input type="text" id="f-last" placeholder="Last" autocomplete="family-name" />
+    </div>
+  </div>
+
+  <div class="sig-area-wrap">
+    <label>Signature <span style="font-weight:400;color:var(--muted);">(draw in the box)</span></label>
+    <canvas id="sigCanvas" width="660" height="120"></canvas>
+    <div class="sig-tools"><button onclick="clearSig()">✕ Clear Signature</button></div>
+  </div>
+
+  <div class="acknowledgement">
+    <input type="checkbox" id="ack-check" />
+    <label for="ack-check">
+      I confirm I attended the toolbox talk "<strong id="ack-title">—</strong>" and understand the safety information presented.
+    </label>
+  </div>
+
+  <button class="btn btn-primary" onclick="submitEntry()">SUBMIT SIGN-IN</button>
+</div>
+
+<div class="roster-section">
+  <h3>ATTENDANCE ROSTER <span class="roster-count" id="roster-count">0 SIGNED</span></h3>
+  <div id="roster-container"><div class="roster-empty">No signatures yet — be the first to sign in.</div></div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- ADMIN VIEW -->
+
+<div id="view-admin" class="view">
+  <div class="admin-wrap">
+
+```
+<div id="pin-gate">
+  <div class="pin-gate-inner">
+    <h2>🔒 ADMIN ACCESS</h2>
+    <div class="field-group">
+      <label>Admin PIN</label>
+      <input type="password" id="pin-input" placeholder="Enter PIN" maxlength="8"
+             onkeydown="if(event.key==='Enter')checkPin()" />
+    </div>
+    <div id="pin-error" class="error-msg" style="display:none;">Incorrect PIN — try again.</div>
+    <button class="btn btn-primary" onclick="checkPin()">UNLOCK</button>
+  </div>
+</div>
+
+<div id="admin-panel" style="display:none;">
+  <div class="admin-header">
+    <div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:6px;">ADMIN PANEL</div>
+      <h2 id="admin-talk-title"></h2>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" onclick="exportCSV()">↓ Export CSV</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨 Print Sheet</button>
+      <button class="btn btn-ghost" onclick="clearEntries()" style="border-color:var(--red);color:var(--red);">✕ Clear All Entries</button>
+    </div>
+  </div>
+  <div class="stat-bar">
+    <div><div class="s-label">Total Signed In</div><div class="s-val big" id="admin-count">0</div></div>
+    <div><div class="s-label">Date</div><div class="s-val" id="admin-date">—</div></div>
+    <div><div class="s-label">Presenter</div><div class="s-val" id="admin-presenter">—</div></div>
+  </div>
+  <div id="admin-roster"></div>
+</div>
+```
+
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'tbt_v1';
+let entries = [];
+let adminUnlocked = false;
+
+// Apply config immediately
+document.getElementById('hdr-company').textContent  = CONFIG.company;
+document.getElementById('di-title').textContent     = CONFIG.talkTitle;
+document.getElementById('di-presenter').textContent = CONFIG.presenter;
+document.getElementById('ack-title').textContent    = CONFIG.talkTitle;
+document.getElementById('di-date').textContent      = new Date().toLocaleDateString('en-US',
+  { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+// ── CANVAS ──
+const canvas = document.getElementById('sigCanvas');
+const ctx = canvas.getContext('2d');
+let drawing = false, hasSig = false;
+
+function setupCtx() { ctx.strokeStyle='#F5C400'; ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.lineJoin='round'; }
+function resizeCanvas() {
+  const w = Math.min(660, canvas.parentElement.clientWidth - 2);
+  const snap = hasSig ? canvas.toDataURL() : null;
+  canvas.width = w; canvas.height = 120; setupCtx();
+  if (snap) { const img = new Image(); img.onload = () => ctx.drawImage(img,0,0,w,120); img.src = snap; }
+}
+setupCtx(); resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function getPos(e) {
+  const r = canvas.getBoundingClientRect(), s = e.touches ? e.touches[0] : e;
+  return { x:(s.clientX-r.left)*(canvas.width/r.width), y:(s.clientY-r.top)*(canvas.height/r.height) };
+}
+canvas.addEventListener('mousedown',  e => { drawing=true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); });
+canvas.addEventListener('mousemove',  e => { if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); hasSig=true; });
+canvas.addEventListener('mouseup',    () => drawing=false);
+canvas.addEventListener('mouseleave', () => drawing=false);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; const p=getPos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); }, {passive:false});
+canvas.addEventListener('touchmove',  e => { e.preventDefault(); if(!drawing)return; const p=getPos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); hasSig=true; }, {passive:false});
+canvas.addEventListener('touchend',   () => drawing=false);
+function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); hasSig=false; }
+
+// ── STORAGE ──
+async function saveEntries() { try { await window.storage.set(STORAGE_KEY+'_entries', JSON.stringify(entries)); } catch(e){} }
+async function loadEntries()  { try { const r=await window.storage.get(STORAGE_KEY+'_entries'); if(r) entries=JSON.parse(r.value); } catch(e){ entries=[]; } }
+
+// ── SUBMIT ──
+function submitEntry() {
+  const first=document.getElementById('f-first').value.trim();
+  const last =document.getElementById('f-last').value.trim();
+  const ack  =document.getElementById('ack-check').checked;
+  const err  =document.getElementById('form-error');
+  if (!first||!last||!hasSig||!ack) { err.style.display='block'; return; }
+  err.style.display='none';
+  entries.push({ id:Date.now(), first, last, sig:canvas.toDataURL('image/png'),
+    time:new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) });
+  saveEntries(); renderRoster('roster-container');
+  document.getElementById('f-first').value='';
+  document.getElementById('f-last').value='';
+  document.getElementById('ack-check').checked=false;
+  clearSig();
+  const f=document.getElementById('success-flash'); f.style.display='block';
+  setTimeout(()=>f.style.display='none', 3000);
+}
+
+// ── ROSTER ──
+function renderRoster(id) {
+  const el=document.getElementById(id);
+  const cnt=document.getElementById('roster-count');
+  if(cnt) cnt.textContent=entries.length+' SIGNED';
+  if(!entries.length){ el.innerHTML='<div class="roster-empty">No signatures yet — be the first to sign in.</div>'; return; }
+  el.innerHTML=`<table class="roster-table">
+    <thead><tr><th>#</th><th>Name</th><th>Signature</th><th>Timestamp</th></tr></thead>
+    <tbody>${entries.map((e,i)=>`<tr>
+      <td class="entry-num">#${i+1}</td>
+      <td><strong>${e.first} ${e.last}</strong></td>
+      <td><img class="sig-thumb" src="${e.sig}" alt="sig"/></td>
+      <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);">${e.time}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// ── TABS ──
+function switchTab(tab) {
+  ['signin','admin'].forEach(t=>{
+    document.getElementById('view-'+t).classList.toggle('active', t===tab);
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+  });
+  if(tab==='admin') refreshAdmin();
+}
+
+// ── ADMIN ──
+function checkPin() {
+  if(document.getElementById('pin-input').value===CONFIG.adminPin) {
+    document.getElementById('pin-gate').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    adminUnlocked=true; refreshAdmin();
+  } else { document.getElementById('pin-error').style.display='block'; }
+}
+function refreshAdmin() {
+  if(!adminUnlocked) return;
+  document.getElementById('admin-talk-title').textContent=CONFIG.talkTitle;
+  document.getElementById('admin-count').textContent=entries.length;
+  document.getElementById('admin-date').textContent=document.getElementById('di-date').textContent;
+  document.getElementById('admin-presenter').textContent=CONFIG.presenter;
+  renderRoster('admin-roster');
+}
+function exportCSV() {
+  let csv=`"Talk Title","${CONFIG.talkTitle}"\n"Company","${CONFIG.company}"\n"Presenter","${CONFIG.presenter}"\n"Date","${document.getElementById('di-date').textContent}"\n\n"#","First Name","Last Name","Timestamp"\n`;
+  entries.forEach((e,i)=>csv+=`"${i+1}","${e.first}","${e.last}","${e.time}"\n`);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`toolbox-talk-${CONFIG.talkTitle.replace(/\s+/g,'-').toLowerCase()}.csv`;
+  a.click();
+}
+function clearEntries() {
+  if(!confirm('Clear ALL sign-in entries? This cannot be undone.')) return;
+  entries=[]; saveEntries(); refreshAdmin(); renderRoster('roster-container');
+}
+
+// ── INIT ──
+(async()=>{ await loadEntries(); renderRoster('roster-container'); })();
+</script>
+
+</body>
+</html>
